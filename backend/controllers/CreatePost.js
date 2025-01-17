@@ -1,14 +1,18 @@
 import postsModel from "../models/posts.model.js";
 const CreatePost = async (req, res)=> {
-    const {user,coverimg, title, slug, desc, content} = req.body
+    const {coverimg, title, slug, desc, content} = req.body
+    const user = req.userId
+    console.log(user, "user")
+    if(!user){
+        return res.status(401).json({ message: "Access denied" })
+    }
     try{
         const posts = await postsModel.create({
             user,coverimg, title, slug, desc, content
         })
         console.log(typeof posts,"posts")
         if(posts){
-            
-            res.status(200).json(posts)
+            res.status(201).json(posts)
         }
         else{
             res.status(500).json({"error": "Internal server error"})
